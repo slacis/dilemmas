@@ -1,0 +1,42 @@
+
+<ion-header>
+
+  <!--<ion-navbar>-->
+    <!--<ion-buttons start>-->
+      <!--<button ion-button icon-only menuToggle>-->
+        <!--<ion-icon name="menu"></ion-icon>-->
+      <!--</button>-->
+    <!--</ion-buttons>-->
+    <!--<ion-title>Login</ion-title>-->
+  <!--</ion-navbar>-->
+
+</ion-header>
+
+<ion-content text-center class="center-wrapper background-gradient" padding>
+  <span class="transparent-bg">
+  <form #f="ngForm" (ngSubmit)="onSignin(f)">
+    <ion-item class="dilemmas-logo" text-center>Dilemmas</ion-item>
+    <ion-item text-center no-lines style="color: white"><strong>Login</strong></ion-item>
+    <ion-list>
+      <ion-item style="background-color: white">
+        <ion-label fixed>E-Mail</ion-label>
+        <ion-input
+          type="email"
+          ngModel
+          name="email"
+          required></ion-input>
+      </ion-item>
+      <ion-item style="background-color: white">
+        <ion-label fixed>Password</ion-label>
+        <ion-input
+          type="password"
+          ngModel
+          name="password"
+          required></ion-input>
+      </ion-item>
+    </ion-list>
+    <button ion-button block type="submit" [disabled]="!f.valid">Login</button>
+    <button ion-button outline full [color]="" (click)="onSignUp()" type="button">No Account? Sign up here!</button>
+  </form>
+</span>
+</ion-content>

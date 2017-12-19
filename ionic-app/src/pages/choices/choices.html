@@ -1,0 +1,62 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="onNewChoice()">
+        <ion-icon name="add"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="onGetChoices()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>My Dilemmas</ion-title>
+
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="background-gradient" padding>
+  <ion-card *ngFor="let choice of choices">
+
+    <ion-card-content text-center>
+      <ion-card-header>
+        Dilemma:
+      </ion-card-header>
+      <p> {{choice.description}}</p>
+    </ion-card-content>
+
+    <ion-row>
+      <ion-col text-center col-6>
+        <img (click)="onShowImage(choice.base64ImageOne, 1)" [src]="choice.base64ImageOne">
+        <button ion-button icon-left clear small>
+          <ion-icon name="thumbs-up"></ion-icon>
+          <div>{{choice.optionOneScore}}</div>
+        </button>
+        <div><b>{{choice.optionOne}}</b></div>
+      </ion-col>
+      <ion-col text-center col-6>
+        <img (click)="onShowImage(choice.base64ImageTwo, 2)" [src]="choice.base64ImageTwo">
+        <button ion-button icon-left clear small>
+          <ion-icon name="thumbs-up"></ion-icon>
+          <div>{{choice.optionTwoScore}}</div>
+        </button>
+        <div><b>{{choice.optionTwo}}</b></div>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col center text-center>
+        <ion-note>
+          {{choice.timeStamp| date:'yyyy-MM-dd HH:mm:ss'}}
+        </ion-note>
+      </ion-col>
+    </ion-row>
+
+  </ion-card>
+</ion-content>

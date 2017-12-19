@@ -1,0 +1,24 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+zappa = "*"
+flask = "*"
+flask-mysqldb = "*"
+pymysql = "*"
+python-dotenv = "*"
+pyjwt = "*"
+flask-sqlalchemy = "*"
+mysql-connector-python-rf = "*"
+flask-cors = "*"
+"boto3" = "*"
+
+
+[dev-packages]
+
+awscli = "*"

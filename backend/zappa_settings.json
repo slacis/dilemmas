@@ -1,0 +1,11 @@
+{
+    "dev": {
+        "app_function": "choices.app",
+        "aws_region": "us-west-2",
+        "profile_name": "default",
+        "project_name": "backend",
+        "runtime": "python3.6",
+        "s3_bucket": "choices-bucket",
+        "keep_warm": false
+    }
+}

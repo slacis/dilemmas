@@ -1,0 +1,85 @@
+// http://ionicframework.com/docs/theming/
+
+
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+
+// Fonts
+@font-face{
+  font-family: 'Shrikhand';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../assets/fonts/Shrikhand.woff2') format('woff2');
+}
+
+.background-gradient  {
+  background: #536976;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #292E49, #536976);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #292E49, #536976); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.transparent-bg *:not(button)  {
+  background: none;
+}
+
+// Custom styles to ionic elements
+ion-icon {
+  color: lightblue;
+}
+
+ion-card {
+  border-radius: 15px!important;
+  border: 1px solid black;
+}
+
+ion-card-header {
+  font-family: 'Shrikhand', cursive;
+  font-size:2em!important;
+}
+// Color of font in ion-title
+.bar-buttons,
+.toolbar-title {
+  color: lightsteelblue;
+}
+
+// Color of background in navbar
+.toolbar-background {
+  background: #606c88;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #3f4c6b, #606c88);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #3f4c6b, #606c88); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+// Font in navbar
+.toolbar-title.toolbar-title-md,
+.toolbar-title.toolbar-title-ios,
+.toolbar-title.toolbar-title-wp {
+  font-family: 'Shrikhand', cursive;
+  //text-shadow: 1px 1px 2px black;
+   }
+
+// Styling for Login/Signup
+.dilemmas-logo {
+  color: white;
+  font-family: 'Shrikhand', cursive;
+  font-size:3.3em;
+  text-shadow: 1px 1px 2px black;
+}
+.center-wrapper > *
+{
+  display: flex!important;
+  align-content: center!important;
+  align-items: center!important;
+  justify-content: center!important;
+}

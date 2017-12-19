@@ -1,0 +1,91 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Add Choice</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <form [formGroup]="choiceForm" (ngSubmit)="onSubmit()">
+    <ion-list>
+      <ion-item-divider text-center>Description</ion-item-divider>
+      <ion-item>
+        <ion-textarea
+          formControlName="description" placeholder="Describe your dilemma!"></ion-textarea>
+      </ion-item>
+      <ion-item-divider>Choices</ion-item-divider>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label stacked text-center>Choice One</ion-label>
+              <ion-textarea text-center
+                formControlName="choiceOne"></ion-textarea>
+            </ion-item>
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label stacked text-center>Choice Two</ion-label>
+              <ion-textarea text-center
+                formControlName="choiceTwo"></ion-textarea>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-item-divider text-center>Choice Photos</ion-item-divider>
+        <ion-row>
+          <ion-col col-6>
+            <ion-item text-center>
+                <h5>Choice One</h5>
+              <button
+                ion-button
+                icon-left
+                outline
+                type="button"
+                (click)="onTakePhoto('one')"
+              >
+                <ion-icon name="camera"></ion-icon>
+                Select
+              </button>
+            </ion-item>
+          </ion-col>
+          <ion-col col-6>
+            <ion-item text-center>
+              <h5>Choice Two</h5>
+            <button
+              ion-button
+              icon-left
+              outline
+              type="button"
+              (click)="onTakePhoto('two')"
+            >
+              <ion-icon name="camera"></ion-icon>
+              Select
+            </button>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col text-center>
+            <img (click)="onShowImage(base64ImageOne, 1)" [src]='base64ImageOne' alt="No Image Selected">
+          </ion-col>
+          <ion-col>
+            <img (click)="onShowImage(base64ImageTwo, 2) " [src]='base64ImageTwo' alt="No Image Selected">
+          </ion-col>
+        </ion-row>
+
+
+      </ion-grid>
+    </ion-list>
+  </form>
+</ion-content>
+
+<ion-footer>
+  <button
+    type="submit"
+    ion-button
+    block
+    (click)="onSubmit()"
+    [disabled]="!choiceForm.valid">Add Choice</button>
+</ion-footer>
