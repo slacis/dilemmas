@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request, make_response
 from flask_cors import CORS, cross_origin
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import exc, and_
+from sqlalchemy import exc, and_, or_
 from werkzeug.security import generate_password_hash, check_password_hash
 
 s3 = boto3.resource('s3')
@@ -45,10 +45,22 @@ class User_Made_Choice(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
     choice_id = db.Column(db.Integer, db.ForeignKey('choice.choice_id'), primary_key=True)
+    # User votes A/B
     selection_option = db.Column(db.Integer)
 
     choice = db.relationship("Choice", back_populates="users")
     user = db.relationship("User", back_populates="choices_decided")
+
+class User_Has_Friend(db.Model):
+    __tablename__ = 'user_has_friend'
+
+    user_id_from = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+    user_id_to = db.Column(db.Integer, db.ForeignKey('user.user_id'), primary_key=True)
+    # Are users friends?
+    selection_option = db.Column(db.Integer)
+
+    user_from = db.relationship("User", back_populates="friend_from", foreign_keys=[user_id_from])
+    user_to = db.relationship("User", back_populates="friend_to", foreign_keys=[user_id_to])
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -60,6 +72,8 @@ class User(db.Model):
     #   Relationships
     choices_decided = db.relationship("User_Made_Choice", back_populates="user")
     choices = db.relationship("Choice", back_populates="user")
+    friend_from = db.relationship("User_Has_Friend", back_populates="user_from",  foreign_keys=[User_Has_Friend.user_id_from])
+    friend_to = db.relationship("User_Has_Friend", back_populates="user_to",  foreign_keys=[User_Has_Friend.user_id_to])
 
 class Choice(db.Model):
     __tablename__ = 'choice'
@@ -323,8 +337,9 @@ def get_one_choice(current_user, choice_id):
     choice_data['optionTwoScore'] = choice.optionTwoScore
     choice_data['accepted'] = choice.accepted
     choice_data['creator_id'] = choice.creator_id
-
     return jsonify(choice_data)
+
+
 @app.route('/choices/<choice_id>', methods=['PUT'])
 @token_guard
 def accept_choice(current_user, choice_id):
@@ -338,6 +353,7 @@ def accept_choice(current_user, choice_id):
 
     return jsonify({'message': 'Accepted choice!'})
 
+
 @app.route('/choices/<choice_id>', methods=['DELETE'])
 @token_guard
 def delete_choice(current_user, choice_id):
@@ -349,6 +365,7 @@ def delete_choice(current_user, choice_id):
     db.session.delete(choice)
     db.session.commit()
     return jsonify({'message': 'Choice deleted!'})
+
 
 @app.route('/user_made_choice', methods=['POST'])
 @token_guard
@@ -375,6 +392,104 @@ def add_choice_made(current_user):
     except:
         return jsonify({'message': 'Something went wrong'})
     return jsonify({'message': 'Decisions added to user\'s choice successfuly'})
+
+
+@app.route('/user_adds_friend', methods=['POST'])
+@token_guard
+def user_adds_friend(current_user):
+    data = request.get_json()
+    user = User.query.filter_by(username=data['username']).first()
+    # Check if username exists
+    if not user:
+        return jsonify({'message': 'No user with this username found'})
+    else:
+        # Make sure there is no pending friend requests from either direction
+        friend = User_Has_Friend.query.filter(
+          or_
+          (
+            and_(User_Has_Friend.user_id_from == user.user_id, User_Has_Friend.user_id_to == current_user.user_id),
+            and_(User_Has_Friend.user_id_from == current_user.user_id, User_Has_Friend.user_id_to == user.user_id)
+          )).first()
+        if friend and friend.selection_option == 1:
+          return jsonify({'message': 'You are already friends with this user!'})
+        elif friend and friend.selection_option == 0:
+          return jsonify({'message': 'You have a pending incoming/outgoing friend request with this person'})
+        else:
+            friend = User_Has_Friend(selection_option = 0)
+            friend.user_id_from = current_user.user_id
+            friend.user_id_to = user.user_id
+            db.session.add(friend)
+            try:
+                db.session.commit()
+            except:
+                return jsonify({'message': 'Something went wrong'})
+            return jsonify({'message': 'You have successfuly sent a friend request to this user!'})
+
+@app.route('/user_accepts_friend', methods=['POST'])
+@token_guard
+def user_accepts_friend(current_user):
+    data = request.get_json()
+    friend_request = User_Has_Friend.query.filter(and_(User_Has_Friend.user_id_to == current_user.user_id, User_Has_Friend.user_id_from == data['user_id'])).first()
+    if not friend_request:
+      return jsonify({'message': 'Friend request non-existent or removed'})
+    elif friend_request.selection_option == 0:
+        friend_request.selection_option = 1
+        db.session.add(friend_request)
+        try:
+          db.session.commit()
+        except:
+          return jsonify({'message': 'Something went wrong'})
+    else:
+        return jsonify({'message': 'You are already friends with this user'})
+    return jsonify({'message': 'Friend request accepted!'})
+
+# Get all friends
+@app.route('/friend', methods=['GET'])
+@token_guard
+def get_all_friends(current_user):
+    friends = User_Has_Friend.query.filter(
+      and_
+        (
+        or_(User_Has_Friend.user_id_from == current_user.user_id, User_Has_Friend.user_id_to == current_user.user_id),
+        User_Has_Friend.selection_option == 1
+      )).all()
+    output = []
+    if not friends:
+      return jsonify({'message': 'User has no friends'})
+    else:
+      for friend in friends:
+        # Find which friend is not the user himself
+        if friend.user_id_from == current_user.user_id:
+          user_friend = friend.user_to
+        else:
+          user_friend = friend.user_from
+        friend_data = {}
+        friend_data['username'] = user_friend.username
+        friend_data['user_id'] = user_friend.user_id
+        output.append(friend_data)
+    return jsonify(output)
+
+# Delete friend
+@app.route('/friend', methods=['DELETE'])
+@token_guard
+def delete_friend(current_user):
+    data = request.get_json()
+    user_id_to_delete = username=data['user_id']
+    friendship_to_delete = User_Has_Friend.query.filter(
+      and_(
+        User_Has_Friend.selection_option == 1,
+        or_(
+          and_(User_Has_Friend.user_id_from == current_user.user_id, User_Has_Friend.user_id_to == user_id_to_delete),
+          and_(User_Has_Friend.user_id_from == user_id_to_delete, User_Has_Friend.user_id_to == current_user.user_id)
+      ))).first()
+    db.session.delete(friendship_to_delete)
+    try:
+      db.session.commit()
+    except:
+      return jsonify({'message': 'Something went wrong'})
+    return jsonify({'message': 'Friend deleted successfuly!'})
+
+
 
 @app.route('/is_authenticated', methods=['GET'])
 @cross_origin()
