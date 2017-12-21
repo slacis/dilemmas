@@ -1,28 +1,29 @@
 import {Component} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {AlertController, IonicPage, LoadingController, ModalController, NavController, NavParams} from 'ionic-angular';
-import {AddChoicePage} from "../add-choice/add-choice";
-import {Choice} from "../../models/choice.model";
-import {ChoiceProvider} from "../../providers/choice/choice";
-import {ViewImagePage} from "../view-image/view-image";
 import {Storage} from "@ionic/storage"
 import {DataStorageProvider} from "../../providers/data-storage/data-storage";
+import * as globals from "../../app/shared/globals"
+import {User} from "../../models/user.model";
+import {AddFriendPage} from "../add-friend/add-friend";
 
-
-// @IonicPage()
+@IonicPage()
 @Component({
-  selector: 'page-choices',
-  templateUrl: 'choices.html',
+  selector: 'page-friends',
+  templateUrl: 'friends.html',
 })
-export class ChoicesPage {
-  ViewImage = ViewImagePage;
-  choices: Choice[] = [];
+export class FriendsPage {
+  friends: User[] = [];
+  loaded = false;
+  noFriends = false;
+  AddFriendPage = AddFriendPage
   constructor(
     private alertCtrl: AlertController,
     private dataStorage: DataStorageProvider,
+    public http: HttpClient,
     private storage: Storage,
     private loadingCtrl: LoadingController,
     private modalCtrl: ModalController,
-    private choiceProvider: ChoiceProvider,
     public navCtrl: NavController, public navParams: NavParams) {
   }
 
@@ -31,40 +32,46 @@ export class ChoicesPage {
   }
 
   ionViewWillEnter() {
-    if (this.choiceProvider.reload == true){
-      this.onGetChoices()
-      this.choiceProvider.reload = false
-    }
-    else {
-      this.getChoices();
-    }
+    // if (this.choiceProvider.reload == true){
+    this.onGetFriends()
+    // this.choiceProvider.reload = false
+    // }
+    // else {
+    // this.getChoices();
+    // }
     // console.log(this.choices)
+    // }
   }
 
-  onNewChoice() {
-    this.navCtrl.push(AddChoicePage)
-  }
+  onNewFriend()
+    {
+      this.navCtrl.push(AddFriendPage)
+    }
 
-  onShowImage(image, imgNum){
-    let imageModal = this.modalCtrl.create(ViewImagePage, { image: image, imgNum: imgNum });
-    imageModal.present();
-  }
+  // onShowImage(image, imgNum){
+  //   let imageModal = this.modalCtrl.create(ViewImagePage, { image: image, imgNum: imgNum });
+  //   imageModal.present();
+  // }
 
-  onGetChoices(){
+  onGetFriends() {
     const loading = this.loadingCtrl.create({
-      content: 'Fetching dilemmas...'
+      content: 'Fetching friends...'
     });
     loading.present();
     this.storage.get('token').then(
       token => {
-        this.choiceProvider.getServerUserChoices(token)
+        this.getServerFriends(token)
           .subscribe(
-            (data: Choice[]) => {
+            (data: User[]) => {
               // console.log(data)
               console.log('server storage')
               // console.log(choices)
-              this.choices = data
-              this.dataStorage.onStoreChoices(this.choices)
+              this.friends = data
+              this.dataStorage.onStoreFriends(this.friends)
+              if (this.friends.length == 0) {
+                this.noFriends = true;
+              }
+              this.loaded = true;
               loading.dismiss()
               // return this.choices.slice()
             },
@@ -77,36 +84,35 @@ export class ChoicesPage {
               });
               console.log(err)
               alert.present();
-        }
-            )
+            })
       })
   }
 
-  getChoices() {
+  getFriends() {
     const loading = this.loadingCtrl.create({
-      content: 'Fetching dilemmas...'
+      content: 'Fetching friends...'
     });
     loading.present();
-    this.dataStorage.onGetChoices()
+    this.dataStorage.onGetFriends()
       .then(
-        (choices: Choice[]) => {
-          if (!(choices == null)) {
-            this.choices = choices
+        (friends: User[]) => {
+          if (!(friends == null)) {
+            this.friends = friends
             loading.dismiss()
             console.log('local storage')
-            console.log(choices)
-            return this.choices.slice()
+            console.log(friends)
+            return this.friends.slice()
           } else {
             this.storage.get('token').then(
               token => {
-                this.choiceProvider.getServerUserChoices(token)
+                this.getServerFriends(token)
                   .subscribe(
-                    (data: Choice[]) => {
+                    (data: User[]) => {
                       // console.log(data)
                       console.log('server storage')
-                      console.log(choices)
-                      this.choices = data
-                      this.dataStorage.onStoreChoices(this.choices)
+                      console.log(friends)
+                      this.friends = data
+                      this.dataStorage.onStoreFriends(this.friends)
                       loading.dismiss()
                       // return this.choices.slice()
                     },
@@ -123,7 +129,24 @@ export class ChoicesPage {
               })
           }
         }
-    )
+      )
+  }
+
+  getServerFriends(token) {
+    return this.http.get(globals.serverAddress + '/friend',
+      {
+        headers: new HttpHeaders()
+          .set('x-access-token', token)
+          .set('Content-Type', "application/json")
+          .set('Access-Control-Allow-Origin', '*')
+      })
+      .do(
+        (data: User[]) => {
+          console.log(data)
+          this.friends = data
+          this.dataStorage.onStoreFriends(this.friends)
+          return this.friends.slice()
+        })
   }
 
 

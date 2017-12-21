@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {IonicPage, LoadingController, ModalController, NavController, NavParams} from 'ionic-angular';
+import {AlertController, IonicPage, LoadingController, ModalController, NavController, NavParams} from 'ionic-angular';
 import {ChoiceProvider} from "../../providers/choice/choice";
 import {Choice} from "../../models/choice.model";
 import {Storage} from "@ionic/storage"
@@ -18,6 +18,7 @@ export class ChoicePage{
   noChoices = false;
   decisions = []
   constructor(
+    public alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public storage: Storage,
     public loadingCtrl: LoadingController,
@@ -83,6 +84,16 @@ export class ChoicePage{
                       }
                       this.loaded = true;
                       loading.dismiss()
+                    },
+                    err => {
+                      loading.dismiss()
+                      const alert = this.alertCtrl.create({
+                        title: 'Unable to load dilemmas!',
+                        message: err.message,
+                        buttons: ['Ok']
+                      });
+                      console.log(err)
+                      alert.present();
                     }
                   )
               }
@@ -100,6 +111,16 @@ export class ChoicePage{
                 }
                 this.loaded = true;
                 loading.dismiss()
+              },
+              err => {
+                loading.dismiss()
+                const alert = this.alertCtrl.create({
+                  title: 'Unable to load dilemmas!',
+                  message: err.message,
+                  buttons: ['Ok']
+                });
+                console.log(err)
+                alert.present();
               }
             )
         }

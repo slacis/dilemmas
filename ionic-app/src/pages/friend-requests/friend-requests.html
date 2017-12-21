@@ -1,0 +1,27 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <!--<ion-buttons start>-->
+
+    <!--</ion-buttons>-->
+    <ion-title *ngIf="mode == 'incoming'">Incoming Friend Requests</ion-title>
+    <ion-title *ngIf="mode == 'outgoing'">Outgoing Friend Requests</ion-title>
+
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="background-gradient" padding>
+  <ion-item *ngIf="noChoices" text-center>
+    <h2>No friend requests</h2>
+  </ion-item>
+  <ion-card *ngIf="loaded && !noFriends">
+    <ion-item *ngFor="let friend of friends">
+      <ion-icon name="close" item-end></ion-icon>
+      <ion-icon name="person" item-start></ion-icon>
+      <ion-label>{{friend.username}} </ion-label>
+    </ion-item>
+  </ion-card>
+</ion-content>

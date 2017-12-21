@@ -22,7 +22,7 @@
 
     <ion-row>
       <ion-col text-center col-6>
-        <img (click)="onShowImage(choice.base64ImageOne, 1)" [src]="choice.base64ImageOne">
+        <img *ngIf="choice.base64ImageOne!= '0'" (click)="onShowImage(choice.base64ImageOne, 1)" [src]="choice.base64ImageOne">
         <button ion-button icon-left clear small
         (click)="onMakeDecision(choice, true)">
           <ion-icon name="thumbs-up"></ion-icon>
@@ -31,7 +31,7 @@
         <div><b>{{choice.optionOne}}</b></div>
       </ion-col>
       <ion-col text-center col-6>
-        <img (click)="onShowImage(choice.base64ImageTwo, 2)" [src]="choice.base64ImageTwo">
+        <img  *ngIf="choice.base64ImageTwo!= '0'" (click)="onShowImage(choice.base64ImageTwo, 2)" [src]="choice.base64ImageTwo">
         <button ion-button icon-left clear small
                 (click)="onMakeDecision(choice, false)">
           <ion-icon name="thumbs-up"></ion-icon>

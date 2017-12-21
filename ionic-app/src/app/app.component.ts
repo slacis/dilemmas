@@ -7,14 +7,18 @@ import {LoginPage} from "../pages/login/login";
 import {SignupPage} from "../pages/signup/signup";
 import {AuthProvider} from "../providers/auth/auth";
 import {Storage} from "@ionic/storage";
+import {FriendsPage} from "../pages/friends/friends";
+import {RequestTabsPage} from "../pages/request-tabs/request-tabs";
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
   rootPage:any = LoginPage;
-  loginPage = LoginPage
-  signupPage = SignupPage
+  loginPage = LoginPage;
+  signupPage = SignupPage;
+  friendsPage = FriendsPage;
+  requestTabsPage = RequestTabsPage;
 
 
   @ViewChild('nav') nav: NavController;
@@ -52,7 +56,7 @@ export class MyApp {
   }
 
   onLoad(page: any) {
-    this.nav.setRoot(page);
+    this.nav.push(page);
     this.menuCtrl.close();
   }
 
