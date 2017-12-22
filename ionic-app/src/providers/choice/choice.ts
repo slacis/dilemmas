@@ -5,6 +5,7 @@ import {Storage} from "@ionic/storage"
 import 'rxjs/Rx';
 import {DataStorageProvider} from "../data-storage/data-storage";
 import {LoadingController} from "ionic-angular";
+import * as globals from "../../app/shared/globals"
 // import {Response} from '@angular/http';
 
 @Injectable()
@@ -21,9 +22,7 @@ export class ChoiceProvider {
     console.log('Hello ChoiceProvider Provider');
   }
 
-  // server = "http://10.0.2.2:5000"
-  // server = "http://127.0.0.1:5000"
-  server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
+
 
   addChoice(choiceID, description: string, optionOne: string, optionTwo: string, base64ImageOne: string, base64ImageTwo: string, accepted: boolean, token: string) {
     console.log('base64: ')
@@ -31,7 +30,7 @@ export class ChoiceProvider {
 
     let choice = new Choice(choiceID, description, optionOne, optionTwo, base64ImageOne, base64ImageTwo, accepted)
     this.choices.push(choice);
-    return this.http.post(this.server + '/choices', choice,
+    return this.http.post(globals.serverAddress + '/choices', choice,
       {
         headers: new HttpHeaders()
           .set('x-access-token', token)
@@ -63,7 +62,7 @@ export class ChoiceProvider {
 
 
   getRandomChoices(token) {
-    return this.http.get(this.server + '/random_choices',
+    return this.http.get(globals.serverAddress + '/random_choices',
       {
         headers: new HttpHeaders()
           .set('x-access-token', token)
@@ -74,7 +73,7 @@ export class ChoiceProvider {
 
   makeDecision(decisions, token) {
     let payload = {'choice': decisions}
-    return this.http.post(this.server + '/user_made_choice', payload,
+    return this.http.post(globals.serverAddress + '/user_made_choice', payload,
       {
         headers: new HttpHeaders()
           .set('x-access-token', token)
@@ -84,7 +83,7 @@ export class ChoiceProvider {
   }
 
   getServerUserChoices(token) {
-    return this.http.get(this.server + '/choices',
+    return this.http.get(globals.serverAddress + '/choices',
       {
         headers: new HttpHeaders()
           .set('x-access-token', token)

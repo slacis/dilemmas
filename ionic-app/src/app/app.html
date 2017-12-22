@@ -1,7 +1,7 @@
 <ion-menu [content]="nav">
   <ion-header>
     <ion-toolbar>
-      <ion-title>Menu</ion-title>
+      <ion-title>{{userName}}</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -35,8 +35,23 @@
       <button
         ion-item
         icon-left
+        (click)="onLoad(friendsPage)"
+      >
+        <ion-icon name="people"></ion-icon>
+        Friends
+      </button>
+      <button
+        ion-item
+        icon-left
+        (click)="onLoad(requestTabsPage)"
+      >
+        <ion-icon name="person-add"></ion-icon>
+        Friend Requests
+      </button>
+      <button
+        ion-item
+        icon-left
         (click)="onLogout()"
-
       >
         <ion-icon name="log-out"></ion-icon>
         Logout

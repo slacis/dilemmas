@@ -1,0 +1,44 @@
+
+<ion-header>
+
+  <ion-navbar>
+    <ion-buttons start>
+      <!--<button ion-button icon-only menuToggle>-->
+      <!--<ion-icon name="menu"></ion-icon>-->
+      <!--</button>-->
+      <!--</ion-buttons>-->
+      <!--<ion-buttons end>-->
+      <!--<button ion-button icon-only (click)="onNewFriend()">-->
+      <!--<ion-icon name="person-add"></ion-icon>-->
+      <!--</button>-->
+      <button ion-button icon-only (click)="onGetFriends()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+
+    </ion-buttons>
+    <ion-title>Friends</ion-title>
+
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content class="background-gradient" padding>
+  <ion-card>
+  <ion-item>
+    <ion-label color="primary">Username</ion-label>
+    <ion-input [(ngModel)]="newFriend" placeholder="Enter Username"></ion-input>
+    <button (click)="onAddFriend(newFriend)"clear ion-button item-right>Add</button>
+  </ion-item>
+  </ion-card>
+  <ion-card text-center *ngIf="noFriends">
+    <p class="dilemma">Press the '+' button to add friends!</p>
+  </ion-card>
+  <ion-card *ngIf="loaded && !noFriends">
+    <ion-item *ngFor="let friend of friends">
+      <ion-icon name="close" item-end></ion-icon>
+      <ion-icon name="person" item-start></ion-icon>
+      <ion-label>{{friend.username}} </ion-label>
+    </ion-item>
+  </ion-card>
+</ion-content>

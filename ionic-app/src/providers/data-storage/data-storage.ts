@@ -21,7 +21,7 @@ export class DataStorageProvider {
   onStoreChoices(choices) {
     let currentUser = this.storage.get('currentUser').then(
       userName => {
-        this.storage.set(userName, choices)
+        this.storage.set(userName+'choices', choices)
       }
     )
 
@@ -30,7 +30,58 @@ export class DataStorageProvider {
   onGetChoices() {
     return this.storage.get('currentUser').then(
       userName => {
-        return this.storage.get(userName)
+        return this.storage.get(userName+'choices')
+      }
+    )
+  }
+
+  onStoreFriends(friends) {
+    let currentUser = this.storage.get('currentUser').then(
+      userName => {
+        this.storage.set(userName+'friends', friends)
+      }
+    )
+
+  }
+
+  onGetFriends() {
+    return this.storage.get('currentUser').then(
+      userName => {
+        return this.storage.get(userName+'friends')
+      }
+    )
+  }
+
+  onStoreIncomingFriendRequests(friends) {
+    let currentUser = this.storage.get('currentUser').then(
+      userName => {
+        this.storage.set(userName+'incomingFriendRequests', friends)
+      }
+    )
+
+  }
+
+  onGetIncomingFriendRequests() {
+    return this.storage.get('currentUser').then(
+      userName => {
+        return this.storage.get(userName+'incomingFriendRequests')
+      }
+    )
+  }
+
+  onStoreOutgoingFriendRequests(friends) {
+    let currentUser = this.storage.get('currentUser').then(
+      userName => {
+        this.storage.set(userName+'outgoingFriendRequests', friends)
+      }
+    )
+
+  }
+
+  onGetOutgoingFriendRequests() {
+    return this.storage.get('currentUser').then(
+      userName => {
+        return this.storage.get(userName+'outgoingFriendRequests')
       }
     )
   }

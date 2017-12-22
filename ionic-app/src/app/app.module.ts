@@ -18,6 +18,11 @@ import {SignupPage} from "../pages/signup/signup";
 import {LoginPage} from "../pages/login/login";
 import {IonicStorageModule} from "@ionic/storage";
 import {ViewImagePage} from "../pages/view-image/view-image";
+import {FriendsPage} from "../pages/friends/friends";
+import {RequestTabsPage} from "../pages/request-tabs/request-tabs";
+import {FriendRequestsPage} from "../pages/friend-requests/friend-requests";
+import {FriendProvider} from '../providers/friend/friend';
+
 
 
 @NgModule({
@@ -30,6 +35,9 @@ import {ViewImagePage} from "../pages/view-image/view-image";
     LoginPage,
     SignupPage,
     ViewImagePage,
+    FriendsPage,
+    RequestTabsPage,
+    FriendRequestsPage
   ],
   imports: [
     BrowserModule,
@@ -38,7 +46,8 @@ import {ViewImagePage} from "../pages/view-image/view-image";
       {
         scrollPadding: false,
         scrollAssist: true,
-        autoFocusAssist: false
+        autoFocusAssist: false,
+        backButtonText: '',
       }),
     IonicStorageModule.forRoot()
   ],
@@ -52,6 +61,9 @@ import {ViewImagePage} from "../pages/view-image/view-image";
     LoginPage,
     SignupPage,
     ViewImagePage,
+    FriendsPage,
+    RequestTabsPage,
+    FriendRequestsPage
   ],
   providers: [
     StatusBar,
@@ -61,7 +73,8 @@ import {ViewImagePage} from "../pages/view-image/view-image";
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ChoiceProvider,
     DataStorageProvider,
-    AuthProvider
+    AuthProvider,
+    FriendProvider
   ]
 })
 export class AppModule {}

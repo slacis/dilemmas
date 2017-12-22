@@ -141,7 +141,7 @@ export class AddChoicePage implements OnInit {
                     loading.dismiss();
                     const alert = this.alertCtrl.create({
                       title: 'Choice creation failed!',
-                      message: err.message,
+                      message: err.error.message,
                       buttons: ['Ok']
                     });
                     alert.present();
@@ -160,7 +160,7 @@ export class AddChoicePage implements OnInit {
                 loading.dismiss();
                 const alert = this.alertCtrl.create({
                   title: 'Choice creation failed!',
-                  message: err.message,
+                  message: err.error.message,
                   buttons: ['Ok']
                 });
                 alert.present();

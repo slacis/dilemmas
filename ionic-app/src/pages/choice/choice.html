@@ -8,30 +8,32 @@
 
 
 <ion-content class="background-gradient" padding>
-  <ion-item *ngIf="noChoices" text-center>
-  <h2>No Dilemmas Available!</h2>
-  </ion-item>
+  <ion-card *ngIf="noChoices">
+    <ion-item text-center>
+      <h2 class="dilemma">No Dilemmas Available!</h2>
+    </ion-item>
+  </ion-card>
   <ion-card *ngIf="loaded && !noChoices">
 
     <ion-card-content text-center>
       <ion-card-header>
         Dilemma:
       </ion-card-header>
-      <p> {{choice?.description}}</p>
+      <p class="dilemma"> {{choice?.description}}</p>
     </ion-card-content>
 
     <ion-row>
       <ion-col text-center col-6>
-        <img (click)="onShowImage(choice.base64ImageOne, 1)" [src]="choice.base64ImageOne">
+        <img *ngIf="choice.base64ImageOne!= '0'" (click)="onShowImage(choice.base64ImageOne, 1)" [src]="choice.base64ImageOne">
         <button ion-button icon-left clear small
-        (click)="onMakeDecision(choice, true)">
+                (click)="onMakeDecision(choice, true)">
           <ion-icon name="thumbs-up"></ion-icon>
           <div>{{choice.choiceOneScore}}</div>
         </button>
         <div><b>{{choice.optionOne}}</b></div>
       </ion-col>
       <ion-col text-center col-6>
-        <img (click)="onShowImage(choice.base64ImageTwo, 2)" [src]="choice.base64ImageTwo">
+        <img  *ngIf="choice.base64ImageTwo!= '0'" (click)="onShowImage(choice.base64ImageTwo, 2)" [src]="choice.base64ImageTwo">
         <button ion-button icon-left clear small
                 (click)="onMakeDecision(choice, false)">
           <ion-icon name="thumbs-up"></ion-icon>
@@ -43,7 +45,7 @@
     <ion-row>
       <ion-col center text-center>
         <ion-note>
-          {{choice.timeStamp| date:'yyyy-MM-dd HH:mm:ss'}}
+          {{choice.timeStamp * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}
         </ion-note>
       </ion-col>
     </ion-row>
