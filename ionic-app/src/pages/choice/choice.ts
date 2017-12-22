@@ -5,6 +5,7 @@ import {Choice} from "../../models/choice.model";
 import {Storage} from "@ionic/storage"
 import 'rxjs/Rx';
 import {ViewImagePage} from "../view-image/view-image";
+import * as moment from 'moment';
 
 // @IonicPage()
 @Component({
@@ -69,9 +70,9 @@ export class ChoicePage{
           this.choiceProvider.makeDecision(this.decisions, token)
             .subscribe(
               response => {
-                console.log(response)
+                console.log(response);
                 // We must wait for the decisions to be added to the database before fetching more dilemmas
-                this.decisions = []
+                this.decisions = [];
                 return this.choiceProvider.getRandomChoices(token)
                   .subscribe(
                     (choices: Choice[]) => {
@@ -127,6 +128,10 @@ export class ChoicePage{
 
       }
     )
+  }
+
+  intParse(int) {
+    return parseInt(int)
   }
 
 

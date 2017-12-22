@@ -16,9 +16,9 @@
 
 
 <ion-content class="background-gradient" padding>
-  <ion-item *ngIf="noFriends" text-center>
-    <h2>No friend requests</h2>
-  </ion-item>
+  <ion-card *ngIf="noFriends" text-center>
+    <p class="dilemma">No friend requests</p>
+  </ion-card>
   <ion-card *ngIf="loaded && !noFriends">
     <ion-item *ngFor="let friend of friends">
       <ion-icon *ngIf="mode == 'incoming'" name="add" item-end (click)="onAdd(friend)"></ion-icon>

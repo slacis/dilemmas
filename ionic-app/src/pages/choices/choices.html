@@ -2,11 +2,9 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-buttons start>
-      <button ion-button icon-only menuToggle>
-        <ion-icon name="menu"></ion-icon>
-      </button>
-    </ion-buttons>
+    <button ion-button icon-only menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
     <ion-buttons end>
       <button ion-button icon-only (click)="onNewChoice()">
         <ion-icon name="add"></ion-icon>
@@ -23,13 +21,19 @@
 
 
 <ion-content class="background-gradient" padding>
+
+  <ion-card text-center *ngIf="noChoices">
+    <!--<ion-item text-center>-->
+      <p class="dilemma">Click the plus button to create a Dilemma!</p>
+    <!--</ion-item>-->
+  </ion-card>
   <ion-card *ngFor="let choice of choices">
 
     <ion-card-content text-center>
       <ion-card-header>
-        Dilemma:
+        <!--Dilemma:-->
       </ion-card-header>
-      <p> {{choice.description}}</p>
+      <p class="dilemma"> {{choice.description}}</p>
     </ion-card-content>
 
     <ion-row>
@@ -53,7 +57,7 @@
     <ion-row>
       <ion-col center text-center>
         <ion-note>
-          {{choice.timeStamp| date:'yyyy-MM-dd HH:mm:ss'}}
+          {{choice.timeStamp * 1000| date:'yyyy-MM-dd HH:mm:ss'}}
         </ion-note>
       </ion-col>
     </ion-row>

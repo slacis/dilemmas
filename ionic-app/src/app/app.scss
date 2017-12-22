@@ -23,6 +23,13 @@
   src: url('../assets/fonts/Shrikhand.woff2') format('woff2');
 }
 
+@font-face{
+  font-family: 'Arvo';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../assets/fonts/Arvo.woff2') format('woff2');
+}
+
 .background-gradient  {
   background: #536976;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #292E49, #536976);  /* Chrome 10-25, Safari 5.1-6 */
@@ -45,7 +52,7 @@ ion-card {
 
 ion-card-header {
   font-family: 'Shrikhand', cursive;
-  font-size:2em!important;
+  font-size:2.2em!important;
 }
 // Color of font in ion-title
 .bar-buttons,
@@ -67,7 +74,7 @@ ion-card-header {
 .toolbar-title.toolbar-title-wp {
   font-family: 'Shrikhand', cursive;
   //text-shadow: 1px 1px 2px black;
-   }
+}
 
 // Styling for Login/Signup
 .dilemmas-logo {
@@ -82,4 +89,10 @@ ion-card-header {
   align-content: center!important;
   align-items: center!important;
   justify-content: center!important;
+}
+
+// Dilemma description
+.dilemma {
+  font-family: 'Arvo', cursive;
+  font-size:1.5em!important;
 }

@@ -46,7 +46,8 @@ import {FriendProvider} from '../providers/friend/friend';
       {
         scrollPadding: false,
         scrollAssist: true,
-        autoFocusAssist: false
+        autoFocusAssist: false,
+        backButtonText: '',
       }),
     IonicStorageModule.forRoot()
   ],

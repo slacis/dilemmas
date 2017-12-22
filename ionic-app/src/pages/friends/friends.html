@@ -31,9 +31,9 @@
     <button (click)="onAddFriend(newFriend)"clear ion-button item-right>Add</button>
   </ion-item>
   </ion-card>
-  <ion-item *ngIf="noFriends" text-center>
-    <h2>Press the '+' button to add friends!</h2>
-  </ion-item>
+  <ion-card text-center *ngIf="noFriends">
+    <p class="dilemma">Press the '+' button to add friends!</p>
+  </ion-card>
   <ion-card *ngIf="loaded && !noFriends">
     <ion-item *ngFor="let friend of friends">
       <ion-icon name="close" item-end></ion-icon>

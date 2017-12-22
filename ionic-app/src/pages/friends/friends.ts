@@ -143,7 +143,7 @@ export class FriendsPage {
               console.log(data)
               const alert = this.alertCtrl.create({
                 title: 'Success',
-                message: 'Added friend successfuly!',
+                message: 'Friend Request Sent Successfully!',
                 buttons: ['Ok']
               });
               alert.present();

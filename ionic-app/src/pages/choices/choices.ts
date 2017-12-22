@@ -6,6 +6,7 @@ import {ChoiceProvider} from "../../providers/choice/choice";
 import {ViewImagePage} from "../view-image/view-image";
 import {Storage} from "@ionic/storage"
 import {DataStorageProvider} from "../../providers/data-storage/data-storage";
+import * as moment from 'moment';
 
 
 // @IonicPage()
@@ -14,6 +15,7 @@ import {DataStorageProvider} from "../../providers/data-storage/data-storage";
   templateUrl: 'choices.html',
 })
 export class ChoicesPage {
+  noChoices = false;
   ViewImage = ViewImagePage;
   choices: Choice[] = [];
   constructor(
@@ -31,6 +33,7 @@ export class ChoicesPage {
   }
 
   ionViewWillEnter() {
+    this.noChoices = false;
     if (this.choiceProvider.reload == true){
       this.onGetChoices()
       this.choiceProvider.reload = false
@@ -61,15 +64,19 @@ export class ChoicesPage {
           .subscribe(
             (data: Choice[]) => {
               // console.log(data)
-              console.log('server storage')
+              console.log('server storage');
               // console.log(choices)
-              this.choices = data
-              this.dataStorage.onStoreChoices(this.choices)
+              this.choices = data;
+              if (this.choices.length == 0) {
+                this.noChoices = true;
+                console.log(this.noChoices)
+              }
+              this.dataStorage.onStoreChoices(this.choices);
               loading.dismiss()
               // return this.choices.slice()
             },
             err => {
-              loading.dismiss()
+              loading.dismiss();
               const alert = this.alertCtrl.create({
                 title: 'Unable to load dilemmas!',
                 message: err.error.message,
@@ -91,10 +98,13 @@ export class ChoicesPage {
       .then(
         (choices: Choice[]) => {
           if (!(choices == null)) {
-            this.choices = choices
-            loading.dismiss()
-            console.log('local storage')
-            console.log(choices)
+            this.choices = choices;
+            if (this.choices.length == 0) {
+              this.noChoices = true;
+            }
+            loading.dismiss();
+            console.log('local storage');
+            console.log(choices);
             return this.choices.slice()
           } else {
             this.storage.get('token').then(
@@ -105,7 +115,10 @@ export class ChoicesPage {
                       // console.log(data)
                       console.log('server storage')
                       console.log(choices)
-                      this.choices = data
+                      this.choices = data;
+                      if (this.choices.length == 0) {
+                        this.noChoices = true;
+                      }
                       this.dataStorage.onStoreChoices(this.choices)
                       loading.dismiss()
                       // return this.choices.slice()
