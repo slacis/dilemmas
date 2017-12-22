@@ -1,4 +1,17 @@
-<ion-tabs>
+
+<ion-header>
+<ion-navbar>
+
+  <ion-title *ngIf="selectedTab == 0">Incoming Friend Requests</ion-title>
+  <ion-title *ngIf="selectedTab == 1">Outgoing Friend Requests</ion-title>
+  <!--<ion-buttons end>-->
+  <!--<button ion-button icon-only (click)="onClose()">-->
+    <!--<ion-icon name="close"></ion-icon>-->
+  <!--</button>-->
+  <!--</ion-buttons>-->
+</ion-navbar>
+</ion-header>
+<ion-tabs (ionChange)="tabChanged($event)">
   <ion-tab [root]="friendRequests" [rootParams]="paramsIn" tabIcon="log-in" tabTitle="Incoming Requests"></ion-tab>
   <ion-tab [root]="friendRequests" [rootParams]="paramsOut" tabIcon="log-out" tabTitle="Outgoing Requests"></ion-tab>
 </ion-tabs>

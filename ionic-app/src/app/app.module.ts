@@ -19,9 +19,9 @@ import {LoginPage} from "../pages/login/login";
 import {IonicStorageModule} from "@ionic/storage";
 import {ViewImagePage} from "../pages/view-image/view-image";
 import {FriendsPage} from "../pages/friends/friends";
-import {AddFriendPage} from "../pages/add-friend/add-friend";
 import {RequestTabsPage} from "../pages/request-tabs/request-tabs";
 import {FriendRequestsPage} from "../pages/friend-requests/friend-requests";
+import {FriendProvider} from '../providers/friend/friend';
 
 
 
@@ -36,7 +36,6 @@ import {FriendRequestsPage} from "../pages/friend-requests/friend-requests";
     SignupPage,
     ViewImagePage,
     FriendsPage,
-    AddFriendPage,
     RequestTabsPage,
     FriendRequestsPage
   ],
@@ -62,7 +61,6 @@ import {FriendRequestsPage} from "../pages/friend-requests/friend-requests";
     SignupPage,
     ViewImagePage,
     FriendsPage,
-    AddFriendPage,
     RequestTabsPage,
     FriendRequestsPage
   ],
@@ -74,7 +72,8 @@ import {FriendRequestsPage} from "../pages/friend-requests/friend-requests";
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ChoiceProvider,
     DataStorageProvider,
-    AuthProvider
+    AuthProvider,
+    FriendProvider
   ]
 })
 export class AppModule {}

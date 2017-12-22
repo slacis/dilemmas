@@ -5,7 +5,7 @@ import {Storage} from "@ionic/storage"
 import {DataStorageProvider} from "../../providers/data-storage/data-storage";
 import * as globals from "../../app/shared/globals"
 import {User} from "../../models/user.model";
-import {AddFriendPage} from "../add-friend/add-friend";
+import {FriendProvider} from "../../providers/friend/friend";
 
 @IonicPage()
 @Component({
@@ -14,10 +14,11 @@ import {AddFriendPage} from "../add-friend/add-friend";
 })
 export class FriendsPage {
   friends: User[] = [];
+  newFriend = ''
   loaded = false;
   noFriends = false;
-  AddFriendPage = AddFriendPage
   constructor(
+    private friendProvider: FriendProvider,
     private alertCtrl: AlertController,
     private dataStorage: DataStorageProvider,
     public http: HttpClient,
@@ -43,10 +44,6 @@ export class FriendsPage {
     // }
   }
 
-  onNewFriend()
-    {
-      this.navCtrl.push(AddFriendPage)
-    }
 
   // onShowImage(image, imgNum){
   //   let imageModal = this.modalCtrl.create(ViewImagePage, { image: image, imgNum: imgNum });
@@ -55,12 +52,12 @@ export class FriendsPage {
 
   onGetFriends() {
     const loading = this.loadingCtrl.create({
-      content: 'Fetching friends...'
+      content: 'Fetching friend...'
     });
     loading.present();
     this.storage.get('token').then(
       token => {
-        this.getServerFriends(token)
+        this.friendProvider.getServerFriends(token)
           .subscribe(
             (data: User[]) => {
               // console.log(data)
@@ -79,7 +76,7 @@ export class FriendsPage {
               loading.dismiss()
               const alert = this.alertCtrl.create({
                 title: 'Unable to load dilemmas!',
-                message: err.message,
+                message: err.error.message,
                 buttons: ['Ok']
               });
               console.log(err)
@@ -90,7 +87,7 @@ export class FriendsPage {
 
   getFriends() {
     const loading = this.loadingCtrl.create({
-      content: 'Fetching friends...'
+      content: 'Fetching friend...'
     });
     loading.present();
     this.dataStorage.onGetFriends()
@@ -105,7 +102,7 @@ export class FriendsPage {
           } else {
             this.storage.get('token').then(
               token => {
-                this.getServerFriends(token)
+                this.friendProvider.getServerFriends(token)
                   .subscribe(
                     (data: User[]) => {
                       // console.log(data)
@@ -120,7 +117,7 @@ export class FriendsPage {
                       loading.dismiss()
                       const alert = this.alertCtrl.create({
                         title: 'Unable to load dilemmas!',
-                        message: err.message,
+                        message: err.error.message,
                         buttons: ['Ok']
                       });
                       console.log(err)
@@ -132,22 +129,40 @@ export class FriendsPage {
       )
   }
 
-  getServerFriends(token) {
-    return this.http.get(globals.serverAddress + '/friend',
-      {
-        headers: new HttpHeaders()
-          .set('x-access-token', token)
-          .set('Content-Type', "application/json")
-          .set('Access-Control-Allow-Origin', '*')
+  onAddFriend(newFriend) {
+    const loading = this.loadingCtrl.create({
+      content: 'Adding friend...'
+    });
+    loading.present();
+    this.storage.get('token').then(
+      token => {
+        this.friendProvider.onAddFriend(newFriend, token)
+          .subscribe(
+            (data) => {
+              loading.dismiss()
+              console.log(data)
+              const alert = this.alertCtrl.create({
+                title: 'Success',
+                message: 'Added friend successfuly!',
+                buttons: ['Ok']
+              });
+              alert.present();
+            },
+            err => {
+              loading.dismiss()
+              const alert = this.alertCtrl.create({
+                title: 'Unable to add friend!',
+                message: err.error.message,
+                buttons: ['Ok']
+              });
+              console.log(err)
+              alert.present();
+            })
       })
-      .do(
-        (data: User[]) => {
-          console.log(data)
-          this.friends = data
-          this.dataStorage.onStoreFriends(this.friends)
-          return this.friends.slice()
-        })
   }
+
+
+
 
 
 }

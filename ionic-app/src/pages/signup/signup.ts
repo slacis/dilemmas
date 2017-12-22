@@ -59,7 +59,7 @@ export class SignupPage {
           loading.dismiss();
           const alert = this.alertCtrl.create({
             title: 'Registration failed!',
-            message: err.message,
+            message: err.error.message,
             buttons: ['Ok']
           });
           alert.present();
@@ -94,7 +94,7 @@ export class SignupPage {
           loading.dismiss();
           const alert = this.alertCtrl.create({
             title: 'Signin failed!',
-            message: err.message,
+            message: err.error.message,
             buttons: ['Ok']
           });
           alert.present();

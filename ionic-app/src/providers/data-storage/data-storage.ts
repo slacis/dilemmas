@@ -52,4 +52,38 @@ export class DataStorageProvider {
     )
   }
 
+  onStoreIncomingFriendRequests(friends) {
+    let currentUser = this.storage.get('currentUser').then(
+      userName => {
+        this.storage.set(userName+'incomingFriendRequests', friends)
+      }
+    )
+
+  }
+
+  onGetIncomingFriendRequests() {
+    return this.storage.get('currentUser').then(
+      userName => {
+        return this.storage.get(userName+'incomingFriendRequests')
+      }
+    )
+  }
+
+  onStoreOutgoingFriendRequests(friends) {
+    let currentUser = this.storage.get('currentUser').then(
+      userName => {
+        this.storage.set(userName+'outgoingFriendRequests', friends)
+      }
+    )
+
+  }
+
+  onGetOutgoingFriendRequests() {
+    return this.storage.get('currentUser').then(
+      userName => {
+        return this.storage.get(userName+'outgoingFriendRequests')
+      }
+    )
+  }
+
 }

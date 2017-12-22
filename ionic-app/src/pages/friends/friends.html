@@ -8,9 +8,9 @@
       <!--</button>-->
       <!--</ion-buttons>-->
       <!--<ion-buttons end>-->
-      <button ion-button icon-only (click)="onNewFriend()">
-      <ion-icon name="person-add"></ion-icon>
-      </button>
+      <!--<button ion-button icon-only (click)="onNewFriend()">-->
+      <!--<ion-icon name="person-add"></ion-icon>-->
+      <!--</button>-->
       <button ion-button icon-only (click)="onGetFriends()">
         <ion-icon name="refresh"></ion-icon>
       </button>
@@ -24,7 +24,14 @@
 
 
 <ion-content class="background-gradient" padding>
-  <ion-item *ngIf="noChoices" text-center>
+  <ion-card>
+  <ion-item>
+    <ion-label color="primary">Username</ion-label>
+    <ion-input [(ngModel)]="newFriend" placeholder="Enter Username"></ion-input>
+    <button (click)="onAddFriend(newFriend)"clear ion-button item-right>Add</button>
+  </ion-item>
+  </ion-card>
+  <ion-item *ngIf="noFriends" text-center>
     <h2>Press the '+' button to add friends!</h2>
   </ion-item>
   <ion-card *ngIf="loaded && !noFriends">

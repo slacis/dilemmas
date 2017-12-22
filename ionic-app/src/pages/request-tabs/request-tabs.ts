@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {IonicPage, NavController, NavParams, Tabs} from 'ionic-angular';
 import {FriendRequestsPage} from "../friend-requests/friend-requests";
+import {TabsPage} from "../tabs/tabs";
+import {Tab} from "ionic-angular/umd/navigation/nav-interfaces";
 
 /**
  * Generated class for the RequestTabsPage page.
@@ -15,7 +17,8 @@ import {FriendRequestsPage} from "../friend-requests/friend-requests";
   templateUrl: 'request-tabs.html',
 })
 export class RequestTabsPage {
-  friendRequests = FriendRequestsPage
+  selectedTab = 0;
+  friendRequests = FriendRequestsPage;
   constructor(public navCtrl: NavController, public navParams: NavParams) {
   }
   paramsIn = {
@@ -26,11 +29,18 @@ export class RequestTabsPage {
     mode: 'outgoing',
   };
 
-
+  tabChanged(tab: Tab) {
+    this.selectedTab = tab.index;
+  }
+  onClose(){
+    this.navCtrl.setRoot(TabsPage)
+    // this.navCtrl.push(TabsPage)
+  }
 
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad RequestTabsPage');
+
   }
 
 }

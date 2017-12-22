@@ -72,7 +72,7 @@ export class ChoicesPage {
               loading.dismiss()
               const alert = this.alertCtrl.create({
                 title: 'Unable to load dilemmas!',
-                message: err.message,
+                message: err.error.message,
                 buttons: ['Ok']
               });
               console.log(err)
@@ -114,7 +114,7 @@ export class ChoicesPage {
                       loading.dismiss()
                       const alert = this.alertCtrl.create({
                         title: 'Unable to load dilemmas!',
-                        message: err.message,
+                        message: err.error.message,
                         buttons: ['Ok']
                       });
                       console.log(err)

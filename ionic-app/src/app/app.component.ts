@@ -15,6 +15,7 @@ import {RequestTabsPage} from "../pages/request-tabs/request-tabs";
 })
 export class MyApp {
   rootPage:any = LoginPage;
+  userName;
   loginPage = LoginPage;
   signupPage = SignupPage;
   friendsPage = FriendsPage;
@@ -38,6 +39,12 @@ export class MyApp {
                 authenticated => {
                   if (authenticated['isAuthenticated']) {
                     this.rootPage = TabsPage;
+                    this.storage.get('currentUser')
+                      .then(
+                        userName => {
+                          this.userName = userName
+                        }
+                      )
                   } else {
                     this.rootPage = LoginPage;
                   }
