@@ -7,8 +7,8 @@ import {DataStorageProvider} from "../data-storage/data-storage";
 @Injectable()
 export class FriendProvider {
   // server = "http://10.0.2.2:5000"
-  server = "http://127.0.0.1:5000"
-  // server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
+  // server = "http://127.0.0.1:5000"
+  server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
   friends: User[] = []
   public reloadIncoming = false;
   public reloadOutgoing = false;

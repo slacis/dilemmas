@@ -13,8 +13,8 @@ import {LoadingController} from "ionic-angular";
 @Injectable()
 export class ChoiceProvider {
   // server = "http://10.0.2.2:5000"
-  server = "http://127.0.0.1:5000"
-  // server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
+  // server = "http://127.0.0.1:5000"
+  server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
   authToken
   private choices: Choice[] = [];
   public reload = false;
@@ -121,5 +121,30 @@ export class ChoiceProvider {
   onGetReload(){
     return this.reload
   }
+
+  onDeleteChoice(choice_id, token){
+    console.log(choice_id)
+    return this.http.delete(this.server + '/choices/' + choice_id,
+      {
+        headers: new HttpHeaders()
+          .set('x-access-token', token)
+          .set('Content-Type', "application/json")
+          .set('Access-Control-Allow-Origin', '*')
+      })
+  }
+
+
+  onRefreshChoice(choice_id, token){
+    console.log(choice_id)
+    return this.http.get(this.server + '/choices/' + choice_id,
+      {
+        headers: new HttpHeaders()
+          .set('x-access-token', token)
+          .set('Content-Type', "application/json")
+          .set('Access-Control-Allow-Origin', '*')
+      })
+
+  }
+
 
 }

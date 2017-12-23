@@ -61,6 +61,15 @@
         </ion-note>
       </ion-col>
     </ion-row>
-
+    <ion-row>
+      <ion-col center text-center>
+        <button ion-button icon-only (click)="onRefreshChoice(choice)">
+          <ion-icon name="refresh"></ion-icon>
+        </button>
+        <button ion-button icon-only (click)="onDeleteChoice(choice)">
+          <ion-icon name="close"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
   </ion-card>
 </ion-content>

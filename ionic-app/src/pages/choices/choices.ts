@@ -138,5 +138,86 @@ export class ChoicesPage {
     )
   }
 
+  onRefreshChoice(choice){
+    const loading = this.loadingCtrl.create({
+      content: 'Updating dilemma...'
+    });
+    loading.present();
+    console.log(choice)
+    this.storage.get('token').then(
+      token => {
+        this.choiceProvider.onRefreshChoice(choice.choice_id, token)
+          .subscribe(
+            (data: Choice) => {
+              this.choices[this.choices.indexOf(choice)] = data
+              // console.log(data)
+              // console.log('server storage');
+              // console.log(choices)
+              // this.choices = data;
+              // if (this.choices.length == 0) {
+              //   this.noChoices = true;
+              //   console.log(this.noChoices)
+              // }
+              this.dataStorage.onStoreChoices(this.choices);
+              loading.dismiss()
+              // return this.choices.slice()
+            },
+            err => {
+              loading.dismiss();
+              const alert = this.alertCtrl.create({
+                title: 'Unable to update dilemma!',
+                message: err.error.message,
+                buttons: ['Ok']
+              });
+              console.log(err)
+              alert.present();
+            }
+          )
+      })
+
+
+  }
+
+  onDeleteChoice(choice){
+    const loading = this.loadingCtrl.create({
+      content: 'Deleting dilemma...'
+    });
+    loading.present();
+    console.log(choice)
+    this.storage.get('token').then(
+      token => {
+        this.choiceProvider.onDeleteChoice(choice.choice_id, token)
+          .subscribe(
+            (data: Choice[]) => {
+              this.choices.splice(this.choices.indexOf(choice), 1)
+              if (this.choices.length == 0 ) {
+                this.noChoices = true;
+              }
+              // console.log(data)
+              // console.log('server storage');
+              // console.log(choices)
+              // this.choices = data;
+              // if (this.choices.length == 0) {
+              //   this.noChoices = true;
+              //   console.log(this.noChoices)
+              // }
+              this.dataStorage.onStoreChoices(this.choices);
+              loading.dismiss()
+              // return this.choices.slice()
+            },
+            err => {
+              loading.dismiss();
+              const alert = this.alertCtrl.create({
+                title: 'Unable to delete dilemma!',
+                message: err.error.message,
+                buttons: ['Ok']
+              });
+              console.log(err)
+              alert.present();
+            }
+          )
+      })
+  }
+
 
 }
