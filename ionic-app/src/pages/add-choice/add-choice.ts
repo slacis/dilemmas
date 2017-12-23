@@ -11,6 +11,7 @@ import { Storage } from "@ionic/storage"
 import {HttpErrorResponse} from "@angular/common/http";
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/forkJoin';
 import {ViewImagePage} from "../view-image/view-image";
 
 declare var cordova: any;

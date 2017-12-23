@@ -1,17 +1,10 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams, Tabs} from 'ionic-angular';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {FriendRequestsPage} from "../friend-requests/friend-requests";
 import {TabsPage} from "../tabs/tabs";
-import {Tab} from "ionic-angular/umd/navigation/nav-interfaces";
+import {Tab} from "ionic-angular/navigation/nav-interfaces";
 
-/**
- * Generated class for the RequestTabsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
-@IonicPage()
+// @IonicPage()
 @Component({
   selector: 'page-request-tabs',
   templateUrl: 'request-tabs.html',

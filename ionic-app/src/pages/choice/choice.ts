@@ -2,10 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AlertController, IonicPage, LoadingController, ModalController, NavController, NavParams} from 'ionic-angular';
 import {ChoiceProvider} from "../../providers/choice/choice";
 import {Choice} from "../../models/choice.model";
-import {Storage} from "@ionic/storage"
-import 'rxjs/Rx';
+import {Storage} from "@ionic/storage";
+// import 'rxjs/Rx';
 import {ViewImagePage} from "../view-image/view-image";
-import * as moment from 'moment';
 
 // @IonicPage()
 @Component({

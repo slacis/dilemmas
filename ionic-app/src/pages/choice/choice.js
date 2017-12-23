@@ -1,20 +1,13 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 import { Component } from '@angular/core';
-import { IonicPage, LoadingController, ModalController, NavController, NavParams } from 'ionic-angular';
+import { AlertController, LoadingController, ModalController, NavController, NavParams } from 'ionic-angular';
 import { ChoiceProvider } from "../../providers/choice/choice";
 import { Storage } from "@ionic/storage";
-import 'rxjs/Rx';
+// import 'rxjs/Rx';
 import { ViewImagePage } from "../view-image/view-image";
+// @IonicPage()
 var ChoicePage = (function () {
-    function ChoicePage(modalCtrl, storage, loadingCtrl, choiceProvider, navCtrl, navParams) {
+    function ChoicePage(alertCtrl, modalCtrl, storage, loadingCtrl, choiceProvider, navCtrl, navParams) {
+        this.alertCtrl = alertCtrl;
         this.modalCtrl = modalCtrl;
         this.storage = storage;
         this.loadingCtrl = loadingCtrl;
@@ -64,6 +57,8 @@ var ChoicePage = (function () {
                     .subscribe(function (response) {
                     console.log(response);
                     // We must wait for the decisions to be added to the database before fetching more dilemmas
+                    // We must wait for the decisions to be added to the database before fetching more dilemmas
+                    _this.decisions = [];
                     return _this.choiceProvider.getRandomChoices(token)
                         .subscribe(function (choices) {
                         _this.choices = choices;
@@ -76,6 +71,15 @@ var ChoicePage = (function () {
                         }
                         _this.loaded = true;
                         loading.dismiss();
+                    }, function (err) {
+                        loading.dismiss();
+                        var alert = _this.alertCtrl.create({
+                            title: 'Unable to load dilemmas!',
+                            message: err.error.message,
+                            buttons: ['Ok']
+                        });
+                        console.log(err);
+                        alert.present();
                     });
                 });
             }
@@ -92,9 +96,21 @@ var ChoicePage = (function () {
                     }
                     _this.loaded = true;
                     loading.dismiss();
+                }, function (err) {
+                    loading.dismiss();
+                    var alert = _this.alertCtrl.create({
+                        title: 'Unable to load dilemmas!',
+                        message: err.error.message,
+                        buttons: ['Ok']
+                    });
+                    console.log(err);
+                    alert.present();
                 });
             }
         });
+    };
+    ChoicePage.prototype.intParse = function (int) {
+        return parseInt(int);
     };
     ChoicePage.decorators = [
         { type: Component, args: [{
@@ -104,6 +120,7 @@ var ChoicePage = (function () {
     ];
     /** @nocollapse */
     ChoicePage.ctorParameters = function () { return [
+        { type: AlertController, },
         { type: ModalController, },
         { type: Storage, },
         { type: LoadingController, },
@@ -111,14 +128,6 @@ var ChoicePage = (function () {
         { type: NavController, },
         { type: NavParams, },
     ]; };
-    ChoicePage = __decorate([
-        IonicPage(),
-        __metadata("design:paramtypes", [ModalController,
-            Storage,
-            LoadingController,
-            ChoiceProvider,
-            NavController, NavParams])
-    ], ChoicePage);
     return ChoicePage;
 }());
 export { ChoicePage };

@@ -1,14 +1,5 @@
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 import { Component } from '@angular/core';
-import { ActionSheetController, AlertController, IonicPage, LoadingController, ModalController, NavController, NavParams, ToastController } from 'ionic-angular';
+import { ActionSheetController, AlertController, LoadingController, ModalController, NavController, NavParams, ToastController } from 'ionic-angular';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { Camera } from "@ionic-native/camera";
 import { ImagePicker } from "@ionic-native/image-picker";
@@ -16,7 +7,9 @@ import { ChoiceProvider } from "../../providers/choice/choice";
 import { Storage } from "@ionic/storage";
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/forkJoin';
 import { ViewImagePage } from "../view-image/view-image";
+// @IonicPage()
 var AddChoicePage = (function () {
     function AddChoicePage(modalCtrl, alertCtrl, storage, loadingCtrl, choiceProvider, imagePicker, toastCtrl, camera, actionSheetController, navCtrl, navParams) {
         this.modalCtrl = modalCtrl;
@@ -32,6 +25,7 @@ var AddChoicePage = (function () {
         this.navParams = navParams;
         this.photoOne = null;
         this.photoTwo = null;
+        this.reload = false;
     }
     AddChoicePage.prototype.ngOnInit = function () {
         this.initializeForm();
@@ -110,11 +104,13 @@ var AddChoicePage = (function () {
                         .subscribe(function (data) {
                         console.log(data);
                         loading.dismiss();
+                        _this.choiceProvider.reload = true;
+                        _this.navCtrl.popToRoot();
                     }, function (err) {
                         loading.dismiss();
                         var alert = _this.alertCtrl.create({
                             title: 'Choice creation failed!',
-                            message: err.message,
+                            message: err.error.message,
                             buttons: ['Ok']
                         });
                         alert.present();
@@ -126,11 +122,13 @@ var AddChoicePage = (function () {
                     .subscribe(function (data) {
                     console.log(data);
                     loading.dismiss();
+                    _this.choiceProvider.reload = true;
+                    _this.navCtrl.popToRoot();
                 }, function (err) {
                     loading.dismiss();
                     var alert = _this.alertCtrl.create({
                         title: 'Choice creation failed!',
-                        message: err.message,
+                        message: err.error.message,
                         buttons: ['Ok']
                     });
                     alert.present();
@@ -140,7 +138,6 @@ var AddChoicePage = (function () {
         this.choiceForm.reset();
         this.base64ImageTwo = '';
         this.base64ImageOne = '';
-        this.navCtrl.popToRoot();
     };
     //   Helper function to convert uri to base64
     // Probably doesn't belong in this file
@@ -165,7 +162,7 @@ var AddChoicePage = (function () {
     AddChoicePage.prototype.onGetPhoto = function (source) {
         if (source === 'photolibrary') {
             return this.camera.getPicture({
-                quality: 30,
+                quality: 20,
                 destinationType: this.camera.DestinationType.DATA_URL,
                 encodingType: this.camera.EncodingType.JPEG,
                 mediaType: this.camera.MediaType.PICTURE,
@@ -175,7 +172,7 @@ var AddChoicePage = (function () {
         }
         else if (source === 'camera') {
             return this.camera.getPicture({
-                quality: 30,
+                quality: 20,
                 destinationType: this.camera.DestinationType.DATA_URL,
                 encodingType: this.camera.EncodingType.JPEG,
                 mediaType: this.camera.MediaType.PICTURE,
@@ -218,19 +215,6 @@ var AddChoicePage = (function () {
         { type: NavController, },
         { type: NavParams, },
     ]; };
-    AddChoicePage = __decorate([
-        IonicPage(),
-        __metadata("design:paramtypes", [ModalController,
-            AlertController,
-            Storage,
-            LoadingController,
-            ChoiceProvider,
-            ImagePicker,
-            ToastController,
-            Camera,
-            ActionSheetController,
-            NavController, NavParams])
-    ], AddChoicePage);
     return AddChoicePage;
 }());
 export { AddChoicePage };

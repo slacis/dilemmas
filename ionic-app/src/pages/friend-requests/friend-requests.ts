@@ -14,7 +14,7 @@ import {TabsPage} from "../tabs/tabs";
  * Ionic pages and navigation.
  */
 
-@IonicPage()
+// @IonicPage()
 @Component({
   selector: 'page-friend-requests',
   templateUrl: 'friend-requests.html',
@@ -42,16 +42,16 @@ export class FriendRequestsPage {
   ionViewWillEnter() {
     if (this.mode == 'incoming') {
       // if (this.friendProvider.onGetIncomingReload() == true) {
-        this.onGetFriendRequests()
-        // this.friendProvider.reloadIncoming = false
+      this.onGetFriendRequests()
+      // this.friendProvider.reloadIncoming = false
       // }
       // else {
       //   this.getIncomingFriends();
       // }
     } else {
       // if (this.friendProvider.onGetOutgoingReload() == true) {
-        this.onGetOutgoingFriendRequests()
-        // this.friendProvider.reloadOutgoing = false
+      this.onGetOutgoingFriendRequests()
+      // this.friendProvider.reloadOutgoing = false
       // }
       // else {
       //   this.getOutgoingFriends();
@@ -233,43 +233,43 @@ export class FriendRequestsPage {
   }
 
   onAdd(user: User) {
-      const loading = this.loadingCtrl.create({
-        content: 'Accepting friend request...'
-      });
-      loading.present();
-      this.storage.get('token').then(
-        token => {
-          this.friendProvider.onAcceptFriend(parseInt(user.user_id), token)
-            .subscribe(
-              (data) => {
-                console.log(data)
-                this.friends.splice(this.friends.indexOf(user), 1)
-                // this.dataStorage.onStoreIncomingFriendRequests(this.friends)
-                if (this.friends.length == 0) {
-                  this.noFriends = true;
-                }
-                this.loaded = true;
-                loading.dismiss()
-                const alert = this.alertCtrl.create({
-                  title: 'Success',
-                  message: 'successfully added friend!',
-                  buttons: ['Ok']
-                });
-                alert.present();
-                // return this.choices.slice()
-              },
-              err => {
-                loading.dismiss()
-                const alert = this.alertCtrl.create({
-                  title: 'Unable to load friend requests!',
-                  message: err.error.message,
-                  buttons: ['Ok']
-                });
-                console.log(err)
-                alert.present();
-              })
-        })
-    }
+    const loading = this.loadingCtrl.create({
+      content: 'Accepting friend request...'
+    });
+    loading.present();
+    this.storage.get('token').then(
+      token => {
+        this.friendProvider.onAcceptFriend(parseInt(user.user_id), token)
+          .subscribe(
+            (data) => {
+              console.log(data)
+              this.friends.splice(this.friends.indexOf(user), 1)
+              // this.dataStorage.onStoreIncomingFriendRequests(this.friends)
+              if (this.friends.length == 0) {
+                this.noFriends = true;
+              }
+              this.loaded = true;
+              loading.dismiss()
+              const alert = this.alertCtrl.create({
+                title: 'Success',
+                message: 'successfully added friend!',
+                buttons: ['Ok']
+              });
+              alert.present();
+              // return this.choices.slice()
+            },
+            err => {
+              loading.dismiss()
+              const alert = this.alertCtrl.create({
+                title: 'Unable to load friend requests!',
+                message: err.error.message,
+                buttons: ['Ok']
+              });
+              console.log(err)
+              alert.present();
+            })
+      })
+  }
 
   onDelete(user: User) {
     const loading = this.loadingCtrl.create({

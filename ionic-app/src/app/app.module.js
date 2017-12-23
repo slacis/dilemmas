@@ -18,6 +18,10 @@ import { SignupPage } from "../pages/signup/signup";
 import { LoginPage } from "../pages/login/login";
 import { IonicStorageModule } from "@ionic/storage";
 import { ViewImagePage } from "../pages/view-image/view-image";
+import { FriendsPage } from "../pages/friends/friends";
+import { RequestTabsPage } from "../pages/request-tabs/request-tabs";
+import { FriendRequestsPage } from "../pages/friend-requests/friend-requests";
+import { FriendProvider } from '../providers/friend/friend';
 var AppModule = (function () {
     function AppModule() {
     }
@@ -32,6 +36,9 @@ var AppModule = (function () {
                         LoginPage,
                         SignupPage,
                         ViewImagePage,
+                        FriendsPage,
+                        RequestTabsPage,
+                        FriendRequestsPage
                     ],
                     imports: [
                         BrowserModule,
@@ -39,7 +46,8 @@ var AppModule = (function () {
                         IonicModule.forRoot(MyApp, {
                             scrollPadding: false,
                             scrollAssist: true,
-                            autoFocusAssist: false
+                            autoFocusAssist: false,
+                            backButtonText: '',
                         }),
                         IonicStorageModule.forRoot()
                     ],
@@ -53,6 +61,9 @@ var AppModule = (function () {
                         LoginPage,
                         SignupPage,
                         ViewImagePage,
+                        FriendsPage,
+                        RequestTabsPage,
+                        FriendRequestsPage
                     ],
                     providers: [
                         StatusBar,
@@ -62,7 +73,8 @@ var AppModule = (function () {
                         { provide: ErrorHandler, useClass: IonicErrorHandler },
                         ChoiceProvider,
                         DataStorageProvider,
-                        AuthProvider
+                        AuthProvider,
+                        FriendProvider,
                     ]
                 },] },
     ];

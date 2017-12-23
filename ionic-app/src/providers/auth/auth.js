@@ -2,12 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { Storage } from "@ionic/storage";
+// import * as globals from "../../app/shared/globals"
 /*
-  Generated class for the AuthProvider provider.
+ Generated class for the AuthProvider provider.
 
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
+ See https://angular.io/guide/dependency-injection for more info on providers
+ and Angular DI.
+ */
 var AuthProvider = (function () {
     function AuthProvider(storage, http) {
         this.storage = storage;
@@ -31,6 +32,14 @@ var AuthProvider = (function () {
     };
     AuthProvider.prototype.logoutUser = function () {
         this.storage.remove('token');
+    };
+    AuthProvider.prototype.isAuthenticated = function (token) {
+        return this.http.get(this.server + '/is_authenticated', {
+            headers: new HttpHeaders()
+                .set('x-access-token', token)
+                .set('Content-Type', "application/json")
+                .set('Access-Control-Allow-Origin', '*')
+        });
     };
     AuthProvider.decorators = [
         { type: Injectable },

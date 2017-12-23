@@ -3,11 +3,11 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {AlertController, IonicPage, LoadingController, ModalController, NavController, NavParams} from 'ionic-angular';
 import {Storage} from "@ionic/storage"
 import {DataStorageProvider} from "../../providers/data-storage/data-storage";
-import * as globals from "../../app/shared/globals"
+// import * as globals from "../../app/shared/globals"
 import {User} from "../../models/user.model";
 import {FriendProvider} from "../../providers/friend/friend";
 
-@IonicPage()
+// @IonicPage()
 @Component({
   selector: 'page-friends',
   templateUrl: 'friends.html',

@@ -6,7 +6,6 @@ import {ChoiceProvider} from "../../providers/choice/choice";
 import {ViewImagePage} from "../view-image/view-image";
 import {Storage} from "@ionic/storage"
 import {DataStorageProvider} from "../../providers/data-storage/data-storage";
-import * as moment from 'moment';
 
 
 // @IonicPage()

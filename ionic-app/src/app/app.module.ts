@@ -74,7 +74,7 @@ import {FriendProvider} from '../providers/friend/friend';
     ChoiceProvider,
     DataStorageProvider,
     AuthProvider,
-    FriendProvider
+    FriendProvider,
   ]
 })
 export class AppModule {}
