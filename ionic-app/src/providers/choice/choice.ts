@@ -13,8 +13,8 @@ import {LoadingController} from "ionic-angular";
 @Injectable()
 export class ChoiceProvider {
   // server = "http://10.0.2.2:5000"
-  // server = "http://127.0.0.1:5000"
-  server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
+  server = "http://127.0.0.1:5000"
+  // server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
   authToken
   private choices: Choice[] = [];
   public reload = false;
@@ -29,11 +29,11 @@ export class ChoiceProvider {
 
 
 
-  addChoice(choiceID, description: string, optionOne: string, optionTwo: string, base64ImageOne: string, base64ImageTwo: string, accepted: boolean, token: string) {
+  addChoice(choiceID, description: string, optionOne: string, optionTwo: string, base64ImageOne: string, base64ImageTwo: string, accepted: boolean, friendOnly: boolean, token: string) {
     console.log('base64: ')
     console.log(base64ImageTwo)
 
-    let choice = new Choice(choiceID, description, optionOne, optionTwo, base64ImageOne, base64ImageTwo, accepted)
+    let choice = new Choice(choiceID, description, optionOne, optionTwo, base64ImageOne, base64ImageTwo, accepted, friendOnly)
     this.choices.push(choice);
     return this.http.post(this.server + '/choices', choice,
       {
@@ -66,14 +66,24 @@ export class ChoiceProvider {
   // }
 
 
-  getRandomChoices(token) {
-    return this.http.get(this.server + '/random_choices',
-      {
-        headers: new HttpHeaders()
-          .set('x-access-token', token)
-          .set('Content-Type', "application/json")
-          .set('Access-Control-Allow-Origin', '*')
-      })
+  getRandomChoices(token, mode) {
+    if (mode == 'friends') {
+      return this.http.get(this.server + '/random_choices_friends',
+        {
+          headers: new HttpHeaders()
+            .set('x-access-token', token)
+            .set('Content-Type', "application/json")
+            .set('Access-Control-Allow-Origin', '*')
+        })
+    } else {
+      return this.http.get(this.server + '/random_choices',
+        {
+          headers: new HttpHeaders()
+            .set('x-access-token', token)
+            .set('Content-Type', "application/json")
+            .set('Access-Control-Allow-Origin', '*')
+        })
+    }
   }
 
   makeDecision(decisions, token) {

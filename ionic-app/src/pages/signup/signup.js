@@ -70,7 +70,7 @@ var SignupPage = (function () {
             loading.dismiss();
             var alert = _this.alertCtrl.create({
                 title: 'Registration complete!',
-                message: 'successfully registered and signed in!',
+                message: 'Successfully registered and signed in!',
                 buttons: [{
                         text: 'Ok',
                         handler: function () {

@@ -17,6 +17,7 @@ export class ChoicePage{
   loaded = false;
   noChoices = false;
   decisions = []
+  mode = 'friends'
   constructor(
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
@@ -29,6 +30,8 @@ export class ChoicePage{
   ionViewWillEnter() {
   if (this.choices.length == 0) {
     this.onGetChoices()
+  } else {
+    this.noChoices = false;
   }
 
   }
@@ -43,7 +46,8 @@ export class ChoicePage{
       this.onGetChoices()
     } else {
       let ran = Math.floor(Math.random() * this.choices.length)
-      this.choice = this.choices[ran]
+      console.log(this.choices[ran])
+      this.choice = this.choices[ran];
       this.choices.splice(ran, 1)
     }
   }
@@ -72,13 +76,14 @@ export class ChoicePage{
                 console.log(response);
                 // We must wait for the decisions to be added to the database before fetching more dilemmas
                 this.decisions = [];
-                return this.choiceProvider.getRandomChoices(token)
+                return this.choiceProvider.getRandomChoices(token, this.mode)
                   .subscribe(
                     (choices: Choice[]) => {
                       this.choices = choices
                       console.log(this.choices)
                       if (choices.length != 0) {
                         this.nextChoice()
+                        this.noChoices = false;
                       } else {
                         this.noChoices = true;
                       }
@@ -99,13 +104,14 @@ export class ChoicePage{
               }
             )
         } else {
-          return this.choiceProvider.getRandomChoices(token)
+          return this.choiceProvider.getRandomChoices(token, this.mode)
             .subscribe(
               (choices: Choice[]) => {
-                this.choices = choices
-                console.log(this.choices)
+                this.choices = choices;
+                console.log(this.choices);
                 if (choices.length != 0) {
                   this.nextChoice()
+                  this.noChoices = false;
                 } else {
                   this.noChoices = true;
                 }
@@ -129,8 +135,9 @@ export class ChoicePage{
     )
   }
 
-  intParse(int) {
-    return parseInt(int)
+
+  segmentChanged(){
+    this.onGetChoices()
   }
 
 

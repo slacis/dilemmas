@@ -7,9 +7,11 @@ export class Choice {
     public base64ImageOne: string,
     public base64ImageTwo: string,
     public accepted: boolean,
+    public friendOnly: boolean,
     public timeStamp?: number,
     public optionOneScore?: number,
-    public optionTwoScore?: number) {
+    public optionTwoScore?: number
+  ) {
     if(!optionOneScore){
       this.optionOneScore = 0;
     }

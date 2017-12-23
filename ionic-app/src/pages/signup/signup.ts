@@ -80,7 +80,7 @@ export class SignupPage {
           loading.dismiss();
           const alert = this.alertCtrl.create({
             title: 'Registration complete!',
-            message: 'successfully registered and signed in!',
+            message: 'Successfully registered and signed in!',
             buttons: [{
               text: 'Ok',
               handler: () => {

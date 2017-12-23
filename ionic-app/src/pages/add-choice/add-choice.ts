@@ -25,9 +25,10 @@ export class AddChoicePage implements OnInit {
   choiceForm: FormGroup;
   base64ImageOne: string;
   base64ImageTwo: string;
-  photoOne = null
-  photoTwo = null
-  public reload = false
+  photoOne = null;
+  photoTwo = null;
+  friendOnly = false;
+  public reload = false;
 
 
   constructor(
@@ -130,7 +131,7 @@ export class AddChoicePage implements OnInit {
               this.base64ImageOne = 'data:image/jpeg;base64,' + response[0];
               this.base64ImageTwo = 'data:image/jpeg;base64,' + response[1];
               console.log(response[0], response[1]);
-              this.choiceProvider.addChoice('0', value.description, value.choiceOne, value.choiceTwo, this.base64ImageOne, this.base64ImageTwo, false, token)
+              this.choiceProvider.addChoice('0', value.description, value.choiceOne, value.choiceTwo, this.base64ImageOne, this.base64ImageTwo, false, this.friendOnly, token)
                 .subscribe(
                   data => {
                     console.log(data)
@@ -149,7 +150,7 @@ export class AddChoicePage implements OnInit {
                   });
             });
         } else {
-          this.choiceProvider.addChoice('0', value.description, value.choiceOne, value.choiceTwo, '0', '0', false, token)
+          this.choiceProvider.addChoice('0', value.description, value.choiceOne, value.choiceTwo, '0', '0', false, this.friendOnly, token)
             .subscribe(
               data => {
                 console.log(data)

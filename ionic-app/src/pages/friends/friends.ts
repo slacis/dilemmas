@@ -161,6 +161,44 @@ export class FriendsPage {
       })
   }
 
+  onDelete(user: User) {
+    const loading = this.loadingCtrl.create({
+      content: 'Deleting friend...'
+    });
+    loading.present();
+    this.storage.get('token').then(
+      token => {
+        this.friendProvider.onDeleteFriendRequest(parseInt(user.user_id), token)
+          .subscribe(
+            (data) => {
+              console.log(data)
+              this.friends.splice(this.friends.indexOf(user), 1)
+              // this.dataStorage.onStoreIncomingFriendRequests(this.friends)
+              if (this.friends.length == 0) {
+                this.noFriends = true;
+              }
+              this.loaded = true;
+              loading.dismiss()
+              const alert = this.alertCtrl.create({
+                title: 'Success',
+                message: 'Successfully deleted friend!',
+                buttons: ['Ok']
+              });
+              alert.present();
+              // return this.choices.slice()
+            },
+            err => {
+              loading.dismiss()
+              const alert = this.alertCtrl.create({
+                title: 'Unable to delete friend!',
+                message: err.error.message,
+                buttons: ['Ok']
+              });
+              console.log(err)
+              alert.present();
+            })
+      })
+  }
 
 
 

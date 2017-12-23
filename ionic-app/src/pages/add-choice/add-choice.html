@@ -15,10 +15,10 @@
     <ion-list>
       <ion-item-divider text-center>Description</ion-item-divider>
       <ion-item>
-        <ion-textarea
+        <ion-textarea text-center
           formControlName="description" placeholder="Describe your dilemma!"></ion-textarea>
       </ion-item>
-      <ion-item-divider>Choices</ion-item-divider>
+      <ion-item-divider text-center>Choices</ion-item-divider>
       <ion-grid>
         <ion-row>
           <ion-col>
@@ -73,7 +73,7 @@
           <ion-col text-center>
             <img (click)="onShowImage(base64ImageOne, 1)" [src]='base64ImageOne' alt="No Image Selected">
           </ion-col>
-          <ion-col>
+          <ion-col text-center>
             <img (click)="onShowImage(base64ImageTwo, 2) " [src]='base64ImageTwo' alt="No Image Selected">
           </ion-col>
         </ion-row>
@@ -82,13 +82,23 @@
       </ion-grid>
     </ion-list>
   </form>
-</ion-content>
 
-<ion-footer>
+  <ion-item>
+    <ion-toggle [(ngModel)]="friendOnly" checked="false"></ion-toggle>
+    <ion-label>
+      Only Visible to Friends
+    </ion-label>
+    <ion-icon name='people' item-start></ion-icon>
+  </ion-item>
+
   <button
     type="submit"
     ion-button
     block
     (click)="onSubmit()"
     [disabled]="!choiceForm.valid">Add Choice</button>
-</ion-footer>
+</ion-content>
+
+<!--<ion-footer>-->
+
+<!--</ion-footer>-->

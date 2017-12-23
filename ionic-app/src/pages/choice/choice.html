@@ -2,7 +2,24 @@
 
   <ion-navbar>
     <ion-title text-center>Make a decision!</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="onGetChoices()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="mode" (ionChange)="segmentChanged($event)" color="light">
+      <ion-segment-button value="friends">
+        <span class="dilemma">Friends</span>
+        <!--<ion-icon name="people"></ion-icon>-->
+      </ion-segment-button>
+      <ion-segment-button value="random">
+        <span class="dilemma">Random</span>
+        <!--<ion-icon name="help"></ion-icon>-->
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 
 </ion-header>
 

@@ -14,8 +14,8 @@ import { Storage } from "@ionic/storage"
 @Injectable()
 export class AuthProvider {
   // server = "http://10.0.2.2:5000"
-  // server = "http://127.0.0.1:5000"
-  server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
+  server = "http://127.0.0.1:5000"
+  // server = "https://3zudaflf8b.execute-api.us-west-2.amazonaws.com/dev"
 
   constructor(
     private storage: Storage,

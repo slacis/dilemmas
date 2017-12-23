@@ -252,7 +252,7 @@ export class FriendRequestsPage {
               loading.dismiss()
               const alert = this.alertCtrl.create({
                 title: 'Success',
-                message: 'successfully added friend!',
+                message: 'Successfully added friend!',
                 buttons: ['Ok']
               });
               alert.present();
