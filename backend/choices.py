@@ -76,7 +76,7 @@ class User(db.Model):
   admin = db.Column(db.Boolean)
   #   Relationships
   choices_decided = db.relationship("User_Made_Choice", back_populates="user")
-  choices = db.relationship("Choice", back_populates="user")
+  choices = db.relationship("Choice", back_populates="user", cascade="save-update, merge, delete")
   friend_from = db.relationship("User_Has_Friend", back_populates="user_from",  foreign_keys=[User_Has_Friend.user_id_from])
   friend_to = db.relationship("User_Has_Friend", back_populates="user_to",  foreign_keys=[User_Has_Friend.user_id_to])
 
@@ -93,9 +93,10 @@ class Choice(db.Model):
   optionOneScore = db.Column(db.Integer)
   optionTwoScore = db.Column(db.Integer)
   accepted = db.Column(db.Boolean)
+  friendOnly = db.Column(db.Boolean)
   # Foreign Keys
   creator_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-  users = db.relationship("User_Made_Choice", back_populates="choice")
+  users = db.relationship("User_Made_Choice", back_populates="choice", cascade="save-update, merge, delete")
   user = db.relationship("User", back_populates="choices")
 
 # Guard for token authentication
@@ -258,8 +259,55 @@ def get_all_choices(current_user):
 @cross_origin()
 @token_guard
 def get_random_choices(current_user):
-  subq = subq = Choice.query.with_entities(Choice.choice_id).outerjoin(User_Made_Choice).filter(User_Made_Choice.user_id == current_user.user_id).subquery()
-  choices = Choice.query.filter(and_(~Choice.choice_id.in_(subq), Choice.creator_id != current_user.user_id)).limit(5)
+  subq = Choice.query.with_entities(Choice.choice_id).outerjoin(User_Made_Choice).filter(User_Made_Choice.user_id == current_user.user_id).subquery()
+  choices = Choice.query.filter(and_(~Choice.choice_id.in_(subq), and_(Choice.creator_id != current_user.user_id, Choice.friendOnly != True))).limit(5)
+  output = []
+  for choice in choices:
+    print('URI!')
+    print(choice.base64ImageOne)
+
+    base64ImageOne = download_and_convert_image(choice.base64ImageOne) if (choice.base64ImageOne != '0') else '0'
+    base64ImageTwo = download_and_convert_image(choice.base64ImageTwo) if (choice.base64ImageTwo != '0') else '0'
+    choice_data = {}
+    choice_data['choice_id'] = str(choice.choice_id)
+    choice_data['description'] = choice.description
+    choice_data['optionOne'] = choice.optionOne
+    choice_data['optionTwo'] = choice.optionTwo
+    choice_data['base64ImageOne'] = base64ImageOne
+    choice_data['base64ImageTwo'] = base64ImageTwo
+    choice_data['timeStamp'] = int(float(choice.timeStamp))
+    choice_data['optionOneScore'] = choice.optionOneScore
+    choice_data['optionTwoScore'] = choice.optionTwoScore
+    choice_data['accepted'] = choice.accepted
+    choice_data['creator_id'] = choice.creator_id
+    output.append(choice_data)
+  print(output)
+  return jsonify(output)
+
+# Get random choices/dilemmas that the user has not seen and is not the creator
+# And is friends with the user
+@app.route('/random_choices_friends', methods=['GET'])
+@cross_origin()
+@token_guard
+def get_random_choices_friends(current_user):
+  # Get friends in array
+  friends = User_Has_Friend.query.filter(
+    and_
+      (
+      or_(User_Has_Friend.user_id_from == current_user.user_id, User_Has_Friend.user_id_to == current_user.user_id),
+      User_Has_Friend.selection_option == 1
+    )).all()
+  flist = []
+  for friend in friends:
+    # Find which friend is not the user himself
+    if friend.user_id_from == current_user.user_id:
+      user_friend = friend.user_to
+    else:
+      user_friend = friend.user_from
+    flist.append(user_friend.user_id)
+
+  subq = Choice.query.with_entities(Choice.choice_id).outerjoin(User_Made_Choice).filter(User_Made_Choice.user_id == current_user.user_id).subquery()
+  choices = Choice.query.filter(and_(~Choice.choice_id.in_(subq), Choice.creator_id.in_(flist))).limit(5)
   output = []
   for choice in choices:
     print('URI!')
@@ -281,6 +329,7 @@ def get_random_choices(current_user):
     choice_data['creator_id'] = choice.creator_id
     output.append(choice_data)
   return jsonify(output)
+
 
 # Create choice/dilemma
 @app.route('/choices', methods=['POST'])
@@ -314,6 +363,7 @@ def create_choice(current_user):
     optionOneScore = 0,
     optionTwoScore = 0,
     accepted = False,
+    friendOnly = data['friendOnly'],
     creator_id = current_user.user_id,
     user = user
   )
@@ -332,7 +382,7 @@ def get_one_choice(current_user, choice_id):
   if not choice:
     return jsonify({'message': 'No choice with this id found'})
   base64ImageOne = download_and_convert_image(choice.base64ImageOne) if (choice.base64ImageOne != '0') else '0'
-  base64ImageTwo = download_and_convert_image(choice.base64ImageOne) if (choice.base64ImageTwo != '0') else '0'
+  base64ImageTwo = download_and_convert_image(choice.base64ImageTwo) if (choice.base64ImageTwo != '0') else '0'
   choice_data = {}
   choice_data['choice_id'] = choice.choice_id
   choice_data['description'] = choice.description
@@ -411,6 +461,8 @@ def user_adds_friend(current_user):
   # Check if username exists
   if not user:
     return jsonify({'message': 'No user with this username found'})
+  if user.user_id == current_user.user_id:
+    return jsonify({'message': 'You cannot add yourself as a friend'})
   else:
     # Make sure there is no pending friend requests from either direction
     friend = User_Has_Friend.query.filter(
@@ -507,18 +559,16 @@ def get_all_friends(current_user):
   return jsonify(output)
 
 # Delete friend
-@app.route('/friend', methods=['DELETE'])
+@app.route('/friend_request', methods=['POST'])
 @token_guard
 def delete_friend(current_user):
   data = request.get_json()
   user_id_to_delete = username=data['user_id']
   friendship_to_delete = User_Has_Friend.query.filter(
-    and_(
-      User_Has_Friend.selection_option == 1,
       or_(
         and_(User_Has_Friend.user_id_from == current_user.user_id, User_Has_Friend.user_id_to == user_id_to_delete),
         and_(User_Has_Friend.user_id_from == user_id_to_delete, User_Has_Friend.user_id_to == current_user.user_id)
-      ))).first()
+      )).first()
   db.session.delete(friendship_to_delete)
   try:
     db.session.commit()
@@ -526,25 +576,25 @@ def delete_friend(current_user):
     return jsonify({'message': 'Something went wrong'})
   return jsonify({'message': 'Friend deleted successfully!'})
 
-# Delete friend
-@app.route('/friend_request', methods=['POST'])
-@token_guard
-def delete_friend_request(current_user):
-  data = request.get_json()
-  user_id_to_delete = username=data['user_id']
-  friendship_to_delete = User_Has_Friend.query.filter(
-    and_(
-      User_Has_Friend.selection_option == 0,
-      or_(
-        and_(User_Has_Friend.user_id_from == current_user.user_id, User_Has_Friend.user_id_to == user_id_to_delete),
-        and_(User_Has_Friend.user_id_from == user_id_to_delete, User_Has_Friend.user_id_to == current_user.user_id)
-      ))).first()
-  db.session.delete(friendship_to_delete)
-  try:
-    db.session.commit()
-  except:
-    return jsonify({'message': 'Something went wrong'})
-  return jsonify({'message': 'Friend deleted successfully!'})
+# # Delete friend
+# @app.route('/friend_request', methods=['POST'])
+# @token_guard
+# def delete_friend_request(current_user):
+#   data = request.get_json()
+#   user_id_to_delete = username=data['user_id']
+#   friendship_to_delete = User_Has_Friend.query.filter(
+#     and_(
+#       User_Has_Friend.selection_option == 0,
+#       or_(
+#         and_(User_Has_Friend.user_id_from == current_user.user_id, User_Has_Friend.user_id_to == user_id_to_delete),
+#         and_(User_Has_Friend.user_id_from == user_id_to_delete, User_Has_Friend.user_id_to == current_user.user_id)
+#       ))).first()
+#   db.session.delete(friendship_to_delete)
+#   try:
+#     db.session.commit()
+#   except:
+#     return jsonify({'message': 'Something went wrong'})
+#   return jsonify({'message': 'Friend deleted successfully!'})
 
 
 # Check if token is still valid
